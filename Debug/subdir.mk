@@ -17,7 +17,7 @@ CPP_DEPS += \
 %.o: ../%.cpp
 	@echo 'Building file: $<'
 	@echo 'Invoking: Cross G++ Compiler'
-	arm-linux-gnueabi-g++ -I/usr/arm-linux-gnueabi/include -I../inc/ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	arm-linux-gnueabihf-g++ -I/home/yashren/Academia/BeagleBone/gcc-linaro-arm-linux-gnueabihf-4.8-2014.03_linux/arm-linux-gnueabihf/libc/usr/include -I../inc/ -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

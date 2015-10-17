@@ -12,7 +12,6 @@ extern "C"
 }
 
 ofstream mpu9150::logFileMPU;
-char mpu9150::write_buffer[512] = {0};
 
 mpu9150::mpu9150(double t0) {
     char filename[20];
@@ -108,7 +107,7 @@ mpu9150::mpu9150(double t0) {
     autoSampleDelay = 100000;	// usec default
     count_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-	sprintf(write_buffer, "%s %f,%f,%f\r\n%s %f,%f,%f\r\n%s %f,%f,%f\r\n%s %f,%f,%f\r\n\r\n",
+	sprintf(log_buffer, "%s %f,%f,%f\r\n%s %f,%f,%f\r\n%s %f,%f,%f\r\n%s %f,%f,%f\r\n\r\n",
 			"Accelerometer variance:",accelerometer.x_err_var, accelerometer.y_err_var, accelerometer.z_err_var,
 			"Accelerometer mean:",accelerometer.x_mean, accelerometer.y_mean, accelerometer.z_mean,
 			"Gyroscope variance:",gyroscope.x_err_var,gyroscope.y_err_var,gyroscope.z_err_var,
@@ -170,7 +169,7 @@ void mpu9150::process(void){
 		getIMUdata();
 
 		// Log raw data
-        sprintf(write_buffer, "%f,%f,%f,%f,%f,%f,%f,%.0f\n",
+        sprintf(log_buffer, "%f,%f,%f,%f,%f,%f,%f,%.0f\n",
         		gyroscope.x_axis,gyroscope.y_axis,gyroscope.z_axis,
         		accelerometer.x_axis,accelerometer.y_axis,accelerometer.z_axis,
         		gyroscope.temperature,
@@ -242,8 +241,7 @@ void mpu9150::getGyroData(void){
 	// Write address that should be read
 	writeI2C(fd, &buffer[0], 1);
 
-	if (readI2C(fd,&buffer[0],8))
-	{
+	if (readI2C(fd,&buffer[0],8)){
 		gyroscope.temperature = (float)((signed short int)(((unsigned short int)(buffer[0] << 8)) | buffer[1]))/340 + 35;
 		gyroscope.x_axis = (float)((signed short int)(((unsigned short int)(buffer[2] << 8))| buffer[3]))*MPU9150_LSB2DEGREES - gyroscope.x_mean;
 		gyroscope.y_axis = -(float)((signed short int)(((unsigned short int)(buffer[4] << 8))| buffer[5]))*MPU9150_LSB2DEGREES - gyroscope.y_mean;
@@ -258,8 +256,7 @@ void mpu9150::getAccelData(void){
 	// Write address that should be read
 	writeI2C(fd, &buffer[0], 1);
 
-	if (readI2C(fd,&buffer[0],6))
-	{
+	if (readI2C(fd,&buffer[0],6)){
 		accelerometer.x_axis = (float)((signed short int)(((unsigned short int)(buffer[0] << 8)) | buffer[1]))*MPU9150_LSB2GS;
 		accelerometer.y_axis = -(float)((signed short int)(((unsigned short int)(buffer[2] << 8)) | buffer[3]))*MPU9150_LSB2GS;
 		accelerometer.z_axis = -(float)((signed short int)(((unsigned short int)(buffer[4] << 8)) | buffer[5]))*MPU9150_LSB2GS;
@@ -273,8 +270,7 @@ void mpu9150::getIMUdata(void){
 	// Write address that should be read
 	writeI2C(fd, &buffer[0], 1);
 
-	if (readI2C(fd,&buffer[0],14))
-	{
+	if (readI2C(fd,&buffer[0],14)){
 		accelerometer.x_axis = (float)((signed short int)(((unsigned short int)(buffer[0] << 8)) | buffer[1]))*MPU9150_LSB2GS;
 		accelerometer.y_axis = -(float)((signed short int)(((unsigned short int)(buffer[2] << 8)) | buffer[3]))*MPU9150_LSB2GS;
 		accelerometer.z_axis = -(float)((signed short int)(((unsigned short int)(buffer[4] << 8)) | buffer[5]))*MPU9150_LSB2GS;
@@ -329,7 +325,7 @@ bool mpu9150::writeLogFile(void)
 {
 	if (logFileMPU.is_open())
 	{
-		logFileMPU << write_buffer;
+		logFileMPU << log_buffer;
 		return true;
 	}
 	else

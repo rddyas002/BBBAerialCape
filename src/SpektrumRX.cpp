@@ -147,7 +147,7 @@ void SpektrumRX::decodePacket(char bytes){
         	pwm_module->updatePacket(1, pwm_module->pulsewidth2byte(left));
         	pwm_module->updatePacket(2, pwm_module->pulsewidth2byte(front));
         	pwm_module->updatePacket(3, pwm_module->pulsewidth2byte(rudder));
-        	pwm_module->updatePacket(4, pwm_module->pulsewidth2byte(1600));
+        	pwm_module->updatePacket(4, pwm_module->pulsewidth2byte(1723));
         	pwm_module->updatePacket(5, pwm_module->pulsewidth2byte(right));
     	    pwm_module->sendPacket();
 
@@ -192,11 +192,11 @@ void SpektrumRX::process(void){
         if (bytes_available > 14){
             int n = read(spektrum_fd,&read_buffer[0],64);
             read_buffer[n] = '\0';
-//            printf("0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x | %d\r\n",
-//            		read_buffer[0], read_buffer[1], read_buffer[2], read_buffer[3], read_buffer[4], read_buffer[5], read_buffer[6], read_buffer[7], read_buffer[8],
-//            		read_buffer[9], read_buffer[10], read_buffer[11], read_buffer[12], read_buffer[13], read_buffer[14], read_buffer[15], n);
-            decodePacket(n);
-            printBuffer();
+            printf("0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x | %d\r\n",
+            		read_buffer[0], read_buffer[1], read_buffer[2], read_buffer[3], read_buffer[4], read_buffer[5], read_buffer[6], read_buffer[7], read_buffer[8],
+            		read_buffer[9], read_buffer[10], read_buffer[11], read_buffer[12], read_buffer[13], read_buffer[14], read_buffer[15], n);
+//            decodePacket(n);
+//            printBuffer();
 //            fflush(stdout);
           //  logData();
         }

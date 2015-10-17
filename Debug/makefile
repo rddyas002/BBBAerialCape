@@ -44,7 +44,7 @@ all: BBBAerialCape
 BBBAerialCape: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: Cross G++ Linker'
-	arm-linux-gnueabi-g++ -L/usr/arm-linux-gnueabi/lib -o "BBBAerialCape" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-linux-gnueabihf-g++ -L/home/yashren/Academia/BeagleBone/gcc-linaro-arm-linux-gnueabihf-4.8-2014.03_linux/arm-linux-gnueabihf/libc/lib/arm-linux-gnueabihf -L../lib -o "BBBAerialCape" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

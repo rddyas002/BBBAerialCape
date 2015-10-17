@@ -194,10 +194,9 @@ public:
 	virtual ~mpu9150();
 
     static ofstream logFileMPU;
-    static void openLogFile(void);
-    static void closeLogFile(void);
-    static bool writeLogFile(void);
-    static char write_buffer[512];
+    void openLogFile(void);
+    void closeLogFile(void);
+    bool writeLogFile(void);
 
     double timeSinceStart(void);
 protected:
@@ -215,6 +214,7 @@ private:
 
 	int fd;
 	char buffer[128];
+	char log_buffer[512];
 
     double time_t0;
 };

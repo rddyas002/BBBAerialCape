@@ -15,6 +15,7 @@
 #include "SpektrumRX.h"
 #include "PWM_module.h"
 #include "gps.h"
+#include "BatteryMonitor.h"
 
 #define THREAD_PRIORITY 85
 #define SAMPLE_FREQ 50
@@ -22,9 +23,6 @@
 using namespace std;
 
 double time_t0 = 0.0;
-
-const char AIN_DEV[] = "/sys/devices/ocp.2/44e0d000.tscadc/tiadc/iio:device0/in_voltage0_raw";
-int batt_fd = -1;
 
 double timeNow(void){
 	struct timespec tv;
@@ -40,34 +38,26 @@ double timeNow(void){
 	}
 }
 
-float getBatteryVoltage(void){
-	char buffer[10];
-	int ret = read(batt_fd, buffer, 4);
-	if (ret != -1){
-		buffer[ret] = '\0';
-		int value = atoi(buffer);
-		printf("Battery voltage: %.2f volts\n", (float)value*10.470/470);
-		lseek(batt_fd, 0, 0);
-		return (float)value*10.470/470;
-	}
-	return -1;
-}
 
 int main (int argc, char * arg[]){
+	// set t0
+	timeNow();
+
+	BatteryMonitor * battery = new BatteryMonitor();
+//	GPS * gps = new GPS(time_t0);
+	while(1);
+
+	//while(1);
 	// test functions
-//	batt_fd = open(AIN_DEV, O_RDONLY);
-//	GPS gps_sensor = GPS();
-//	while(1);
-//	while(1){
-//		getBatteryVoltage();
-//		sleep(2);
-//	}
+
+	GPS gps_sensor = GPS(time_t0);
+	while(1);
+
 	//PWM_module PWMmodule;
 	float frequency = 1;
 	PWM_module * PWMmodule;
 	PWMmodule = new PWM_module();
 
-	timeNow();
 	SpektrumRX spektrumRx = SpektrumRX(time_t0, PWMmodule);
 	while(1){
 

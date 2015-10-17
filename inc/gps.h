@@ -27,6 +27,7 @@
 #include <locale.h>
 #include <bitset>
 #include <climits>
+#include "nmea/nmea.h"
 
 using namespace std;
 
@@ -40,9 +41,15 @@ using namespace std;
 
 class GPS {
 public:
-	GPS();
+	GPS(double t0);
+	void test(void);
 	void stopReceiveThread(void);
 	void closeUART(void);
+
+    static ofstream logFileGPS;
+    void openLogFile(void);
+    void closeLogFile(void);
+    bool writeLogFile(void);
 
 	virtual void receiveThread(void);
 	virtual ~GPS();
@@ -56,6 +63,11 @@ private:
     pthread_t receive_thread;
 
     char rx_buffer[256];
+    char gps_sentence[256];
+    char gps_index;
+    char log_buffer[512];
+
+    double time_t0;
 };
 
 #endif /* GPS_H_ */
